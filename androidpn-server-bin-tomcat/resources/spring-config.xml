@@ -130,5 +130,10 @@
 		<property name="filterChainBuilder" ref="filterChainBuilder" />
 		<property name="reuseAddress" value="true" />
 	</bean>
+	<!-- 设置客户端进入空闲状态时间 -->
+	<bean id="sessionConfig" factory-bean="ioAcceptor" factory-method="getSessionConfig">
+		<!-- 30s  -->
+		<property name="bothIdleTime" value="30"/>
+	</bean>
 
 </beans>
