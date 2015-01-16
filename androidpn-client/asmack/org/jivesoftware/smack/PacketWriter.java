@@ -22,6 +22,8 @@ package org.jivesoftware.smack;
 
 import org.jivesoftware.smack.packet.Packet;
 
+import android.util.Log;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -229,4 +231,40 @@ class PacketWriter {
         writer.write(stream.toString());
         writer.flush();
     }
+    
+    /**
+     * 加入心跳机制；
+    * @author Huangsp
+    * @date 2015-1-16 
+    *
+     */
+    public void startHeartThread() {
+    	new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+					while(!done){
+						Log.d("SDK", "heart....");
+						writer.write(" ");
+						writer.flush();
+						Thread.sleep(10*1000);
+					}
+				} catch (Exception e) {
+						e.printStackTrace();
+					 // The exception can be ignored if the the connection is 'done'
+		            // or if the it was caused because the socket got closed
+		            if (!(done || connection.isSocketClosed())) {
+		                done = true;
+		                // packetReader could be set to null by an concurrent disconnect() call.
+		                // Therefore Prevent NPE exceptions by checking packetReader.
+		                if (connection.packetReader != null) {
+		                        connection.notifyConnectionError(e);
+		                }
+		            }
+				}
+			    
+			}
+		}).start();
+    }
+    
 }

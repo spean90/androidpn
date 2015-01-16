@@ -1098,4 +1098,14 @@ public class XMPPConnection extends Connection {
             }
         }
     }
+    /**
+     * 开启心跳
+    * @author Huangsp
+    * @date 2015-1-16 
+    *
+     */
+    public void startHeartThread() {
+    	packetWriter.startHeartThread();
+    }
+    
 }
